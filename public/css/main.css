@@ -1,0 +1,28 @@
+.strikeout {
+	text-decoration: line-through;
+	color:grey;
+}
+
+.plain {
+	color: black;
+}
+
+.mt-4 {margin-top: 15px;}
+
+.button2 {border-radius: 6px;}
+
+a {
+	color: black;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.options {
+    display: none;
+    cursor: pointer
+}
+
+.task-list:hover .options {
+    display: block;
+}
