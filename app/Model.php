@@ -6,7 +6,7 @@ class Model{
 
 	protected $server = "localhost";
 	protected $username = "root";
-	protected $password = "";
+	protected $password = "password";
 	protected $db = "todos";
 	protected $conn;
 
