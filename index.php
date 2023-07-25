@@ -1,4 +1,9 @@
 <?php
+
+    require 'vendor/autoload.php';
+    use App\AuthModel;
+    $authModel = new AuthModel();
+
     session_start();
 
     // Check if the user is logged in
@@ -8,7 +13,11 @@
         exit;
     }
 
-    require 'vendor/autoload.php';
+    if (isset($_GET["logout"])) {
+        // Handle logout request
+        $authModel->logout();
+    }
+
 
 ?>
 
@@ -25,7 +34,7 @@
 		<todo-app></todo-app>
 	</div>
 
-    <a href="logout.php">Logout</a>
+    <a href="login.php?logout=true">Logout</a>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>

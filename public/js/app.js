@@ -16,7 +16,6 @@ Vue.component('todo-app', {
 			    	</div>
 				</div>
 			</div>
-
 		</div>
 	`,
 	data() {
