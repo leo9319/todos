@@ -3,5 +3,8 @@
 		"psr-4": {
 			"App\\": "app/"
 		}
+	},
+	"require": {
+		"stripe/stripe-php": "^10.18"
 	}
 }

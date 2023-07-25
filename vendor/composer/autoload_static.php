@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit37e7c2df8af90582c43924feff338c31
 {
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Stripe\\' => 7,
+        ),
         'A' => 
         array (
             'App\\' => 4,
@@ -14,10 +18,18 @@ class ComposerStaticInit37e7c2df8af90582c43924feff338c31
     );
 
     public static $prefixDirsPsr4 = array (
+        'Stripe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),
+    );
+
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -25,6 +37,7 @@ class ComposerStaticInit37e7c2df8af90582c43924feff338c31
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit37e7c2df8af90582c43924feff338c31::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit37e7c2df8af90582c43924feff338c31::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit37e7c2df8af90582c43924feff338c31::$classMap;
 
         }, null, ClassLoader::class);
     }
