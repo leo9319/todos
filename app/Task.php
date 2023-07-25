@@ -6,13 +6,13 @@ class Task extends Model {
 
 	private $table = "tasks";
 
-	public static function all()
+	public static function all($user_id)
 	{
 		$tasks = array();
 
 		$model = new self();
 
-		$query = "SELECT * FROM $model->table";
+		$query = "SELECT * FROM $model->table WHERE user_id = '$user_id'";
 		if($sql = $model->conn->query($query)) {
 			while($row = mysqli_fetch_assoc($sql)) {
 				$tasks[] = $row;

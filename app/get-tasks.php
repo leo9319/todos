@@ -5,6 +5,9 @@ use App\Task;
 
 $task = new Task;
 
-return Task::all();
+session_start();
+$user_id = $_SESSION['user_id'];
+
+return Task::all($user_id);
 
 ?>
