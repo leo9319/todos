@@ -10,7 +10,10 @@
 
 		$task = new Task();
 
-		if($task->store($name)) {
+        session_start();
+        $user_id = $_SESSION['user_id'];
+
+		if($task->store($name, $user_id)) {
 			$status["message"] = "Task stored";
 		} else {
 			$status["message"] = "Failed to store!";
