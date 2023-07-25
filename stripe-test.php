@@ -2,8 +2,6 @@
 // Require the Stripe PHP library
 require_once('vendor/autoload.php');
 
-use App\User;
-
 // Set your Stripe API keys
 $stripeSecretKey = 'sk_test_51NXr0UBlJ4e0Rc9h0J3ptxH9iKkl269gx7pwKYvZEycqErT3HadoL8P00rToWcMpWCCudADv576Rr7alC0Hd36o600d1j4poXI';
 $stripePublicKey = 'pk_test_51NXr0UBlJ4e0Rc9h3Janq75vNjCLv2EpNjLJq2IObdhu3eWfq3Yq8zCdafbc55yIvVxWOeeTxyrFwZZAYAvQPTev00p4TiiviX';
@@ -25,12 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         // Payment successful, you can handle the success scenario here
-        session_start();
-        $user_id = $_SESSION['user_id'];
-        $user = new User();
-        $user->set_premium($user_id);
-        header("Location: index.php");
-        exit;
+        echo 'Payment successful! Charge ID: ' . $charge->id;
     } catch (\Stripe\Exception\CardException $e) {
         // Payment failed due to card error
         echo 'Card declined: ' . $e->getMessage();
@@ -45,42 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Stripe Payment Integration</title>
-    <?php include_once 'partials/styles.php' ?>
     <!-- Include Stripe.js library -->
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-
-<div class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center ">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-11/12 md:w-4/12">
-            <h1 class="text-red-500 font-bold mb-4 text-2xl text-center opacity-50">Payment Information</h1>
-
-            <div class="container">
-                <div class="flex flex-col space-y-4">
-                    <div class="w-full mx-auto">
-                        <form action="" method="post" id="payment-form">
-                            <div>
-                                <label>Card Number</label>
-                                <div id="card-element">
-                                    <!-- A Stripe Element will be inserted here. -->
-                                </div>
-                            </div>
-                            <button class="mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs w-full" type="submit">Pay Now</button>
-                            <!-- Used to display form errors. -->
-                            <div id="card-errors" role="alert"></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<h1>Stripe Payment Integration Example</h1>
+<form action="" method="post" id="payment-form">
+    <div>
+        <label>Card Number</label>
+        <div id="card-element">
+            <!-- A Stripe Element will be inserted here. -->
         </div>
     </div>
-</div>
-
-
-
-
-<?php include_once 'partials/scripts.php' ?>
+    <button type="submit">Pay Now</button>
+    <!-- Used to display form errors. -->
+    <div id="card-errors" role="alert"></div>
+</form>
 
 <script>
     // Create a Stripe client

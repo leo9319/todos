@@ -21,4 +21,11 @@ class User extends Model
 
         echo json_encode($user);
     }
+
+    public function set_premium($user_id)
+    {
+        $query = "UPDATE $this->table SET is_premium = 1 WHERE id = '$user_id'";
+        return $sql = $this->conn->query($query);
+
+    }
 }
