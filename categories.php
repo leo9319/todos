@@ -31,6 +31,7 @@ if (isset($_GET["logout"])) {
 
 <div id="app">
     <nav-bar></nav-bar>
+    <categories></categories>
 </div>
 
 <?php include_once 'partials/scripts.php' ?>

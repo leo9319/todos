@@ -2,7 +2,7 @@ Vue.component('nav-bar', {
 	template: `
 		<nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 relative z-10">
 		  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-			<a href="#" class="flex items-center">
+			<a href="/index.php" class="flex items-center">
 				<img src="../images/logo.png" class="h-8 mr-3" alt="App Logo" />
 				<span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Todo App</span>
 			</a>
@@ -15,7 +15,7 @@ Vue.component('nav-bar', {
 			<div class="hidden w-full md:block md:w-auto" id="navbar-dropdown">
 			  <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
 				<li>
-				  <a href="#" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent" aria-current="page">Home</a>
+				  <a href="/index.php" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent" aria-current="page">Home</a>
 				</li>
 				<li>
 				  <a href="/categories.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Categories</a>
@@ -63,7 +63,6 @@ Vue.component('nav-bar', {
 	}
 })
 
-
 Vue.component('todo-app', {
 	template: `
 		<div class="bg-gray-100">
@@ -102,8 +101,6 @@ Vue.component('todo-app', {
 	}
 })
 
-
-
 Vue.component('add-task', {
 	template: `
 		<form @submit.prevent="submitForm" class="mt-4">
@@ -138,8 +135,6 @@ Vue.component('add-task', {
 		}
 	}
 })
-
-
 
 Vue.component('tasks-list', {
 	template: `
@@ -244,6 +239,133 @@ Vue.component('tasks-list', {
 	filters: {
 		pluralize(count) {
 			return (count == 1) ? 'item' : 'items'
+		}
+	}
+})
+
+Vue.component('categories', {
+	template: `
+		<div class="bg-gray-100">
+			<div class="min-h-screen flex items-center justify-center -mt-32">
+				<div class="bg-white rounded-lg shadow-lg p-8 w-8/12">
+					<h1 class="text-blue-500 font-bold mb-4 text-5xl text-center opacity-50">categories</h1>
+			
+					<div class="container">
+						<div class="flex flex-col space-y-4">
+							<div class="w-3/4 mx-auto">
+								<add-categories @update="getAllCategories"></add-categories>
+							</div>
+			
+							<div class="w-3/4 mx-auto">
+								<categories-list :categories="categories" @update="getAllCategories"></categories-list>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`,
+	data() {
+		return {
+			categories: []
+		}
+	},
+	methods: {
+		getAllCategories() {
+			axios.get('./app/get-categories.php')
+				.then(response => this.categories = response.data)
+		}
+	},
+	created() {
+		this.getAllCategories()
+	}
+})
+
+Vue.component('add-categories', {
+	template: `
+		<form @submit.prevent="submitForm" class="mt-4">
+			<div class="w-full">
+				<input
+					type="text"
+					placeholder="Add Categories"
+					v-model="category"
+					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+				/>
+			</div>
+		</form>`,
+
+	data() {
+		return {
+			category: ''
+		}
+	},
+
+	methods: {
+		submitForm() {
+			if(this.category) {
+				var params = new URLSearchParams();
+				params.append('name', this.category);
+
+				axios.post('./app/store-category.php', params)
+					.then((response) => {
+						this.$emit('update')
+						this.category = ''
+					});
+			}
+		}
+	}
+})
+
+Vue.component('categories-list', {
+	template: `
+		<ul class="">
+		    <li class="py-1" v-for="category in categories" :key="category.id" @dblclick="toggleEdit(category)">
+		        <div class="flex items-center justify-between border border-gray-100 p-2 rounded-lg shadow-sm" v-if="category.editable != 1">
+					<label >
+						<span>{{ category.name }}</span>
+					</label>
+					<span class="text-red-500 text-sm cursor-pointer" @click="deleteCategory(category)"><i class="fa-solid fa-trash-can"></i></span>
+				</div>
+		        <label v-else>
+		        	<form v-on:submit.prevent="updateCategoryName(category)">
+						<div class="">
+							<input type="text" v-model="category.name"/>
+						</div>
+					</form>
+		        </label>
+		    </li>
+		</ul>
+		`,
+
+	props: ['categories'],
+	data() {
+		return {
+			editOn: false
+		}
+	},
+	methods: {
+		toggleEdit(category) {
+			category.editable = !parseInt(category.editable)
+		},
+		updateCategoryName(category) {
+			var params = new URLSearchParams();
+			params.append('id', category.id);
+			params.append('name', category.name);
+
+			// axios.post('./app/update.php', params)
+			// 	.then((response) => {category.editable = 0});
+		},
+		deleteCategory(category) {
+			var params = new URLSearchParams();
+			params.append('id', category.id);
+
+			// axios.post('./app/single-delete.php', params)
+			// 	.then((response) => {this.$emit('update')});
+		}
+	},
+	computed: {
+		filteredCategories() {
+			return this.categories
 		}
 	}
 })
