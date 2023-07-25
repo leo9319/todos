@@ -13,12 +13,6 @@
         exit;
     }
 
-    if (isset($_GET["logout"])) {
-        // Handle logout request
-        $authModel->logout();
-    }
-
-
 ?>
 
 <!DOCTYPE html>
