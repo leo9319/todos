@@ -1,17 +1,41 @@
 <?php
 
+require 'vendor/autoload.php';
+use App\AuthModel;
+$authModel = new AuthModel();
+
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    // Redirect to the login page if the user is not logged in
+    header("location: login.php");
+    exit;
+}
+
+if (isset($_GET["logout"])) {
+    // Handle logout request
+    $authModel->logout();
+}
+
+
 ?>
 
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Categories</title>
+    <title>Todos | Categories</title>
+    <?php include_once 'partials/styles.php' ?>
 </head>
 <body>
+
+<div id="app">
+    <nav-bar></nav-bar>
+</div>
+
+<?php include_once 'partials/scripts.php' ?>
+
+
 
 </body>
 </html>

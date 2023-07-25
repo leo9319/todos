@@ -1,6 +1,6 @@
 Vue.component('nav-bar', {
 	template: `
-		<nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+		<nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 relative z-10">
 		  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 			<a href="#" class="flex items-center">
 				<img src="../images/logo.png" class="h-8 mr-3" alt="App Logo" />
@@ -67,7 +67,6 @@ Vue.component('nav-bar', {
 Vue.component('todo-app', {
 	template: `
 		<div class="bg-gray-100">
-			<nav-bar></nav-bar>
 			<div class="min-h-screen flex items-center justify-center -mt-32">
 				<div class="bg-white rounded-lg shadow-lg p-8 w-8/12">
 					<h1 class="text-red-500 font-bold mb-4 text-5xl text-center opacity-50">todos</h1>

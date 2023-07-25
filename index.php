@@ -32,6 +32,7 @@
 <body>
 
 	<div id="app">
+        <nav-bar></nav-bar>
 		<todo-app></todo-app>
 	</div>
 
