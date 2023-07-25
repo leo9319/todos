@@ -10,10 +10,10 @@ class AuthModel extends Model {
         $conn = $this->getConnection();
 
         // Check username and password against the database and perform login if valid
-        $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
+        $stmt = $conn->prepare("SELECT id, password, is_premium FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($userId, $hashedPassword);
+        $stmt->bind_result($userId, $hashedPassword, $isPremium);
 
         if ($stmt->fetch() && password_verify($password, $hashedPassword)) {
             // Password is correct, set a session variable to mark the user as logged in
@@ -21,6 +21,7 @@ class AuthModel extends Model {
             $_SESSION["loggedin"] = true;
             $_SESSION["username"] = $username;
             $_SESSION["user_id"] = $userId;
+            $_SESSION["is_premium"] = $isPremium;
             header("location: index.php");
             exit;
         } else {

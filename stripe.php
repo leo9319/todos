@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id = $_SESSION['user_id'];
         $user = new User();
         $user->set_premium($user_id);
+        $_SESSION['is_premium'] = 1;
         header("Location: index.php");
         exit;
     } catch (\Stripe\Exception\CardException $e) {

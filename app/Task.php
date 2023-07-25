@@ -56,4 +56,17 @@ class Task extends Model {
 		return $sql = $this->conn->query($query);
 
 	}
+
+    public function totalTasks($user_id) {
+        $model = new self();
+
+        $query = "SELECT COUNT(*) as count FROM {$model->table} WHERE user_id = '$user_id'";
+        if ($sql = $model->conn->query($query)) {
+            $row = mysqli_fetch_assoc($sql);
+            $count = $row['count'];
+            return $count;
+        }
+
+        return 0; // Return 0 if the query fails or no rows are found
+    }
 }

@@ -111,26 +111,34 @@ Vue.component('add-task', {
 					v-model="task"
 					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 				/>
+				<p v-if="errorMessage !== ''" class="text-xs text-red-500 mt-1">{{ errorMessage }}</p>
 			</div>
 		</form>`,
 
 	data() {
 		return {
-			task: ''
+			task: '',
+			errorMessage: ''
 		}
 	},
 
 	methods: {
 		submitForm() {
 			if(this.task) {
+				this.errorMessage = ''
 				var params = new URLSearchParams();
 				params.append('name', this.task);
 
 				axios.post('./app/store.php', params)
 					.then((response) => {
+						console.log(response)
 						this.$emit('update')
 						this.task = ''
-					});
+					}).catch(error => {
+						if(error.status === 400) {
+							this.errorMessage = 'Limit crossed! Please purchase the full version!'
+						}
+				});
 			}
 		}
 	}

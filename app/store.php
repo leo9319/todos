@@ -12,9 +12,22 @@
 
         session_start();
         $user_id = $_SESSION['user_id'];
+        $is_premium = $_SESSION['is_premium'];
+
+        if(!$is_premium) {
+            $total_tasks = $task->totalTasks($user_id);
+
+            if($total_tasks >= 5) {
+                $status["message"] = "Limit is crossed! Please purchase the premium";
+                http_response_code(400);
+                echo json_encode($status);
+                exit;
+            }
+        }
+
 
 		if($task->store($name, $user_id)) {
-			$status["message"] = "Task stored";
+			$status["message"] = '$test';
 		} else {
 			$status["message"] = "Failed to store!";
 		}
