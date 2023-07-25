@@ -2,9 +2,18 @@
 
 require 'vendor/autoload.php';
 use App\AuthModel;
+use App\User;
 $authModel = new AuthModel();
 
 session_start();
+
+$user = new User();
+$is_premium = $_SESSION['is_premium'];
+
+if($is_premium) {
+    header("location: index.php");
+    exit;
+}
 
 // Check if the user is logged in
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
