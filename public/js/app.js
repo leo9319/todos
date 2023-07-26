@@ -104,13 +104,21 @@ Vue.component('todo-app', {
 Vue.component('add-task', {
 	template: `
 		<form @submit.prevent="submitForm" class="mt-4">
-			<div class="w-full">
-				<input
-					type="text"
-					placeholder="What needs to be done?"
-					v-model="task"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
+			<div class="w-full flex space-x-2 form-row">
+				<div class="w-3/4">
+					<input
+						type="text"
+						placeholder="What needs to be done?"
+						v-model="task"
+						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+					/>
+				</div>
+				<div class="w-1/4">
+					<select v-model="category_id" name="category_id" id="" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+						<option value="0">General</option>
+						<option :value="category.id" v-for="category in categories">{{ category.name }}</option>
+					</select>
+				</div>
 				<p v-if="errorMessage !== ''" class="text-xs text-red-500 mt-1">{{ errorMessage }}</p>
 			</div>
 		</form>`,
@@ -118,6 +126,8 @@ Vue.component('add-task', {
 	data() {
 		return {
 			task: '',
+			categories: [],
+			category_id: 0,
 			errorMessage: ''
 		}
 	},
@@ -128,6 +138,7 @@ Vue.component('add-task', {
 				this.errorMessage = ''
 				var params = new URLSearchParams();
 				params.append('name', this.task);
+				params.append('category_id', this.category_id);
 
 				axios.post('./app/store.php', params)
 					.then((response) => {
@@ -140,7 +151,17 @@ Vue.component('add-task', {
 						}
 				});
 			}
+		},
+		getCategories() {
+			axios.get('./app/get-categories.php')
+				.then(response => {
+					console.log(response.data)
+					this.categories = response.data
+				})
 		}
+	},
+	created() {
+		return this.getCategories();
 	}
 })
 

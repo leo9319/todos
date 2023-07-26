@@ -7,6 +7,7 @@
 
 	if(isset($_POST['name']) && !empty($_POST['name'])) {
 		$name = $_POST['name'];
+		$category_id = $_POST['category_id'];
 
 		$task = new Task();
 
@@ -26,8 +27,8 @@
         }
 
 
-		if($task->store($name, $user_id)) {
-			$status["message"] = '$test';
+		if($task->store($name, $user_id, $category_id)) {
+			$status["message"] = 'Task created!';
 		} else {
 			$status["message"] = "Failed to store!";
 		}
