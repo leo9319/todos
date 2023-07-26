@@ -69,15 +69,14 @@ Vue.component('todo-app', {
 			<div class="min-h-screen flex items-center justify-center -mt-32">
 				<div class="bg-white rounded-lg shadow-lg p-8 w-8/12">
 					<h1 class="text-red-500 font-bold mb-4 text-5xl text-center opacity-50">todos</h1>
-			
 					<div class="container">
 						<div class="flex flex-col space-y-4">
 							<div class="w-3/4 mx-auto">
-								<add-task @update="getAllTasks"></add-task>
+								<add-task @update="getAllTasks" :categories="categories"></add-task>
 							</div>
 			
 							<div class="w-3/4 mx-auto">
-								<tasks-list :tasks="tasks" @update="getAllTasks"></tasks-list>
+								<tasks-list :tasks="tasks" :categories="categories" @update="getAllTasks"></tasks-list>
 							</div>
 						</div>
 					</div>
@@ -87,17 +86,26 @@ Vue.component('todo-app', {
 	`,
 	data() {
 		return {
-			tasks: []
+			tasks: [],
+			categories: [],
 		}
 	},
 	methods: {
 		getAllTasks() {
 			axios.get('./app/get-tasks.php')
 				.then(response => this.tasks = response.data)
+		},
+		getCategories() {
+			axios.get('./app/get-categories.php')
+				.then(response => {
+					console.log(response.data)
+					this.categories = response.data
+				})
 		}
 	},
 	created() {
-		this.getAllTasks()
+		this.getAllTasks();
+		this.getCategories();
 	}
 })
 
@@ -114,7 +122,7 @@ Vue.component('add-task', {
 					/>
 				</div>
 				<div class="w-1/4">
-					<select v-model="category_id" name="category_id" id="" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+					<select v-model="cat_id" name="cat_id" id="" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
 						<option value="0">General</option>
 						<option :value="category.id" v-for="category in categories">{{ category.name }}</option>
 					</select>
@@ -123,11 +131,11 @@ Vue.component('add-task', {
 			</div>
 		</form>`,
 
+	props: ['categories'],
 	data() {
 		return {
 			task: '',
-			categories: [],
-			category_id: 0,
+			cat_id: 0,
 			errorMessage: ''
 		}
 	},
@@ -138,7 +146,7 @@ Vue.component('add-task', {
 				this.errorMessage = ''
 				var params = new URLSearchParams();
 				params.append('name', this.task);
-				params.append('category_id', this.category_id);
+				params.append('cat_id', this.cat_id);
 
 				axios.post('./app/store.php', params)
 					.then((response) => {
@@ -152,64 +160,70 @@ Vue.component('add-task', {
 				});
 			}
 		},
-		getCategories() {
-			axios.get('./app/get-categories.php')
-				.then(response => {
-					console.log(response.data)
-					this.categories = response.data
-				})
-		}
 	},
-	created() {
-		return this.getCategories();
-	}
 })
 
 Vue.component('tasks-list', {
 	template: `
-		<ul class="" v-show="tasks.length > 0">
-		    <li class="py-1" v-for="task in filteredTasks" :key="task.id" @dblclick="toggleEdit(task)">
-		        <div class="flex items-center justify-between border border-gray-100 p-2 rounded-lg shadow-sm" v-if="task.editable != 1">
-					<label >
-						<input type="checkbox" class="" v-model="task.is_completed" true-value="1" false-value="0" />
-						<span :class="listClass(task)">{{ task.name }}</span>
-					</label>
-					<span class="text-red-500 text-sm cursor-pointer" @click="deleteTask(task)"><i class="fa-solid fa-trash-can"></i></span>
-				</div>
-		        <label v-else>
-		        	<form v-on:submit.prevent="updateTaskName(task)">
-						<div class="">
-							<input type="text" v-model="task.name"/>
+		<div>
+			<h3 class="my-2">Filter By Categories</h3>
+			<div class="space-x-1">
+				<button class="hover:bg-green-900 text-green-700 font-semibold hover:text-white px-2 border border-green-900 hover:border-transparent rounded text-xs" @click="setCategoryId('-1')">All Categories</button>
+				<button class="hover:bg-green-900 text-green-700 font-semibold hover:text-white px-2 border border-green-900 hover:border-transparent rounded text-xs" @click="setCategoryId('0')">General</button>
+				<button v-for="category in categories" :key="category.id" class="hover:bg-green-900 text-green-700 font-semibold hover:text-white px-2 border border-green-900 hover:border-transparent rounded text-xs" @click="setCategoryId(category.id)">{{ category.name }}</button>
+			</div>
+			<div class="h-72 overflow-scroll">
+				<ul class="" v-show="tasks.length > 0">
+					<a href="javascript:void(0)" @click="clearCompleted" class="mt-4 text-red-500 text-xs flex justify-end items-center space-x-4">
+						<i class="fa-solid fa-xmark pr-1"></i>
+						Clear Completed
+					</a>
+					<li class="py-1" v-for="task in filteredTasks" :key="task.id" @dblclick="toggleEdit(task)">
+						<div class="flex items-center justify-between border border-gray-100 p-2 rounded-lg shadow-sm" v-if="task.editable != 1">
+							<label >
+								<input type="checkbox" class="" v-model="task.is_completed" true-value="1" false-value="0" />
+								<span :class="listClass(task)">{{ task.name }}</span>
+							</label>
+							<span class="text-red-500 text-sm cursor-pointer" @click="deleteTask(task)"><i class="fa-solid fa-trash-can"></i></span>
 						</div>
-					</form>
-		        </label>
-		    </li>
-		    <li class="">
-		        <div class="">
-		            <div class="">
-		                <p>{{ remainingTasks.length }} {{ remainingTasks.length | pluralize }} left</p>
-		            </div>
-		            <div class="flex space-x-4 mx-auto justify-center">
-		                <button class="bg-transparent hover:bg-blue-900 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-900 hover:border-transparent rounded text-xs" @click="currentFilter = 'all'">All</button>
-		                <button class="bg-transparent hover:bg-blue-900 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-900 hover:border-transparent rounded text-xs" @click="currentFilter = 'active'">active</button>
-		                <button class="bg-transparent hover:bg-blue-900 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-900 hover:border-transparent rounded text-xs" @click="currentFilter = 'completed'">completed</button>
-		            </div>
-		            <div class="">
-		            	<a href="javascript:void(0)" @click="clearCompleted">Clear Completed</a>
-	            	</div>
-		        </div>
-		    </li>
-		</ul>
+						<label v-else>
+							<form v-on:submit.prevent="updateTaskName(task)">
+								<div class="">
+									<input type="text" v-model="task.name"/>
+								</div>
+							</form>
+						</label>
+					</li>
+					<li class="">
+						<div class="">
+							<div class="text-right">
+								<p class="text-xs">{{ remainingTasks.length }} {{ remainingTasks.length | pluralize }} left</p>
+							</div>
+							<div class="flex flex-row space-x-2">
+								<button class="bg-transparent hover:bg-blue-900 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-900 hover:border-transparent rounded text-xs" @click="currentFilter = 'all'">All</button>
+								<button class="bg-transparent hover:bg-blue-900 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-900 hover:border-transparent rounded text-xs" @click="currentFilter = 'active'">active</button>
+								<button class="bg-transparent hover:bg-blue-900 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-900 hover:border-transparent rounded text-xs" @click="currentFilter = 'completed'">completed</button>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
 		`,
 
-	props: ['tasks'],
+	props: ['tasks', 'categories'],
 	data() {
 		return {
 			currentFilter: 'all',
-			editOn: false
+			editOn: false,
+			cat_id: -1
 		}
 	},
 	methods: {
+		setCategoryId(id) {
+			this.cat_id = id;
+			console.log(this.cat_id)
+		},
 		toggleEdit(task) {
 			task.editable = !parseInt(task.editable)
 		},
@@ -247,17 +261,30 @@ Vue.component('tasks-list', {
 	},
 	computed: {
 		filteredTasks() {
+
+			let filtered = [];
 			if(this.currentFilter == 'all') {
-				return this.tasks
+				filtered = this.tasks
 			} else if(this.currentFilter == 'active') {
-				return this.tasks.filter(task => {
+				filtered = this.tasks.filter(task => {
 					return !parseInt(task.is_completed)
 				})
 			} else {
-				return this.tasks.filter(task => {
+				filtered = this.tasks.filter(task => {
 					return parseInt(task.is_completed)
 				})
 			}
+
+			if(this.cat_id != -1) {
+				return filtered.filter(task => {
+					return task.cat_id == this.cat_id
+				})
+			} else {
+				return filtered
+			}
+
+
+
 		},
 		remainingTasks() {
 			return this.tasks.filter(task => {

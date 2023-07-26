@@ -22,9 +22,9 @@ class Task extends Model {
 		echo json_encode($tasks);
 	}
 
-	public function store($name, $user_id, $category_id)
+	public function store($name, $user_id, $cat_id)
 	{
-		$query = "INSERT INTO $this->table (name, user_id, category_id) VALUES ('$name', '$user_id', '$category_id')";
+		$query = "INSERT INTO $this->table (name, user_id, cat_id) VALUES ('$name', '$user_id', '$cat_id')";
 
 		return $sql = $this->conn->query($query);
 
