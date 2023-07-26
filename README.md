@@ -33,3 +33,12 @@ Install PHP dependencies using Composer.
 composer install
 Import the todos.sql database file from the db folder into your MySQL database server.
 
+A backup of the todos database is available in the db folder. Use this file to restore the database or import it to another server.
+```
+
+###Premium Subscription
+With a premium subscription, users enjoy the following benefits:
+
+Unlimited todo lists.
+Enhanced task management features.
+
