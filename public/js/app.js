@@ -132,8 +132,8 @@ Vue.component('add-task', {
 						<option :value="category.id" v-for="category in categories">{{ category.name }}</option>
 					</select>
 				</div>
-				<p v-if="errorMessage !== ''" class="text-xs text-red-500 mt-1">{{ errorMessage }}</p>
 			</div>
+			<p v-if="errorMessage !== ''" class="text-xs text-red-500 mt-1">{{ errorMessage }}</p>
 		</form>`,
 
 	props: ['categories'],
@@ -149,13 +149,12 @@ Vue.component('add-task', {
 		submitForm() {
 			if(this.task) {
 				this.errorMessage = ''
-				var params = new URLSearchParams();
+				let params = new URLSearchParams();
 				params.append('name', this.task);
 				params.append('cat_id', this.cat_id);
 
 				axios.post('./app/store.php', params)
 					.then((response) => {
-						console.log(response)
 						this.$emit('update')
 						this.task = ''
 					}).catch(error => {
