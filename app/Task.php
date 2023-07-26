@@ -6,10 +6,13 @@ class Task extends Model {
 
 	private $table = "tasks";
 
+    /**
+     * @param $user_id
+     * @return void
+     */
 	public static function all($user_id)
 	{
 		$tasks = array();
-
 		$model = new self();
 
 		$query = "SELECT * FROM $model->table WHERE user_id = '$user_id'";
@@ -22,32 +25,48 @@ class Task extends Model {
 		echo json_encode($tasks);
 	}
 
+    /**
+     * @param $name
+     * @param $user_id
+     * @param $cat_id
+     * @return bool|\mysqli_result
+     */
 	public function store($name, $user_id, $cat_id)
 	{
 		$query = "INSERT INTO $this->table (name, user_id, cat_id) VALUES ('$name', '$user_id', '$cat_id')";
-
 		return $sql = $this->conn->query($query);
 
 	}
 
+    /**
+     * @param $id
+     * @param $name
+     * @return bool|\mysqli_result
+     */
 	public function update($id, $name) 
 	{
 		$query = "UPDATE $this->table SET name = '$name' WHERE id = '$id'";
-
 		return $sql = $this->conn->query($query);
 
 	}
 
+    /**
+     * @param $ids
+     * @return bool|\mysqli_result
+     */
 	public function delete($ids) 
 	{
 		$ids = implode("','", explode(',', $ids));
-
 		$query = "DELETE FROM $this->table WHERE id IN ('".$ids."')";
 
 		return $sql = $this->conn->query($query);
 
 	}
 
+    /**
+     * @param $id
+     * @return bool|\mysqli_result
+     */
 	public function singleDelete($id) 
 	{
 
@@ -57,6 +76,10 @@ class Task extends Model {
 
 	}
 
+    /**
+     * @param $user_id
+     * @return int|mixed
+     */
     public function totalTasks($user_id) {
         $model = new self();
 
