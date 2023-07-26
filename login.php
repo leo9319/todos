@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login | Register</title>
+    <title>To Do App | Login</title>
     <?php include_once 'partials/styles.php' ?>
 </head>
 <body>
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p class="text-xl text-gray-600 text-center">Smart way to manage tasks!</p>
                 <div class="mt-4 flex items-center justify-between">
                     <span class="border-b w-1/5 lg:w-1/4"></span>
-                    <a href="#" class="text-xs text-center text-gray-500 uppercase">login with email</a>
+                    <p class="text-xs text-center text-gray-500 uppercase">login with username</p>
                     <span class="border-b w-1/5 lg:w-1/4"></span>
                 </div>
                 <div class="mt-4">
