@@ -25,7 +25,7 @@ class AuthModel extends Model {
             header("location: index.php");
             exit;
         } else {
-            echo "Invalid username or password";
+            $_SESSION["login_error"] = "Invalid username or password";
         }
 
         $stmt->close();

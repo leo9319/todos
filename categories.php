@@ -36,7 +36,5 @@ if (isset($_GET["logout"])) {
 
 <?php include_once 'partials/scripts.php' ?>
 
-
-
 </body>
 </html>
