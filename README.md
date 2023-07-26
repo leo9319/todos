@@ -36,7 +36,7 @@ Import the todos.sql database file from the db folder into your MySQL database s
 A backup of the todos database is available in the db folder. Use this file to restore the database or import it to another server.
 ```
 
-###Premium Subscription
+## Premium Subscription
 With a premium subscription, users enjoy the following benefits:
 
 Unlimited todo lists.
