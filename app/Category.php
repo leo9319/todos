@@ -6,6 +6,10 @@ class Category extends Model {
 
 	private $table = "categories";
 
+    /**
+     * @param $user_id
+     * @return void
+     */
 	public static function all($user_id)
 	{
 		$categories = array();
@@ -22,6 +26,11 @@ class Category extends Model {
 		echo json_encode($categories);
 	}
 
+    /**
+     * @param $name
+     * @param $user_id
+     * @return bool|\mysqli_result
+     */
 	public function store($name, $user_id)
 	{
 		$query = "INSERT INTO $this->table (name, user_id) VALUES ('$name', '$user_id')";
@@ -30,6 +39,11 @@ class Category extends Model {
 
 	}
 
+    /**
+     * @param $id
+     * @param $name
+     * @return bool|\mysqli_result
+     */
 	public function update($id, $name) 
 	{
 		$query = "UPDATE $this->table SET name = '$name' WHERE id = '$id'";
@@ -38,6 +52,10 @@ class Category extends Model {
 
 	}
 
+    /**
+     * @param $ids
+     * @return bool|\mysqli_result
+     */
 	public function delete($ids) 
 	{
 		$ids = implode("','", explode(',', $ids));
@@ -48,6 +66,10 @@ class Category extends Model {
 
 	}
 
+    /**
+     * @param $id
+     * @return bool|\mysqli_result
+     */
 	public function singleDelete($id) 
 	{
 

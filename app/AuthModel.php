@@ -6,6 +6,11 @@ require_once 'Model.php';
 
 class AuthModel extends Model {
 
+    /**
+     * @param $username
+     * @param $password
+     * @return void
+     */
     public function login($username, $password) {
         $conn = $this->getConnection();
 
@@ -31,6 +36,13 @@ class AuthModel extends Model {
         $stmt->close();
     }
 
+    /**
+     * @param $username
+     * @param $email
+     * @param $password
+     * @param $confirm_password
+     * @return void
+     */
     public function register($username, $email, $password, $confirm_password) {
         if ($password !== $confirm_password) {
             $_SESSION["registration_error"] = "Password and Confirm Password do not match.";
@@ -70,6 +82,9 @@ class AuthModel extends Model {
         $stmt->close();
     }
 
+    /**
+     * @return void
+     */
     public function logout() {
         // Destroy the session to log the user out
         session_start();

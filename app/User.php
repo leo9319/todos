@@ -6,6 +6,10 @@ class User extends Model
 {
     private $table = "users";
 
+    /**
+     * @param $user_id
+     * @return void
+     */
     public static function all($user_id)
     {
         $user = array();
@@ -22,6 +26,10 @@ class User extends Model
         echo json_encode($user);
     }
 
+    /**
+     * @param $user_id
+     * @return bool|\mysqli_result
+     */
     public function set_premium($user_id)
     {
         $query = "UPDATE $this->table SET is_premium = 1 WHERE id = '$user_id'";

@@ -10,6 +10,7 @@ class Model{
 	protected $db = "todos";
 	protected $conn;
 
+
 	public function __construct() {
 		try {
 			$this->conn = new \mysqli($this->server, $this->username, $this->password, $this->db);
@@ -18,6 +19,9 @@ class Model{
 		}
 	}
 
+    /**
+     * @return \mysqli
+     */
     public function getConnection() {
         return $this->conn;
     }
