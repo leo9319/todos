@@ -415,8 +415,8 @@ Vue.component('categories-list', {
 			var params = new URLSearchParams();
 			params.append('id', category.id);
 
-			// axios.post('./app/single-delete.php', params)
-			// 	.then((response) => {this.$emit('update')});
+			axios.post('./app/single-delete-category.php', params)
+				.then((response) => {this.$emit('update')});
 		}
 	},
 	computed: {
