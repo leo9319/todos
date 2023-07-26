@@ -4,6 +4,16 @@ require_once('vendor/autoload.php');
 
 use App\User;
 
+session_start();
+
+$user = new User();
+$is_premium = $_SESSION['is_premium'];
+
+if($is_premium) {
+    header("location: index.php");
+    exit;
+}
+
 // Set your Stripe API keys
 $stripeSecretKey = 'sk_test_51NXr0UBlJ4e0Rc9h0J3ptxH9iKkl269gx7pwKYvZEycqErT3HadoL8P00rToWcMpWCCudADv576Rr7alC0Hd36o600d1j4poXI';
 $stripePublicKey = 'pk_test_51NXr0UBlJ4e0Rc9h3Janq75vNjCLv2EpNjLJq2IObdhu3eWfq3Yq8zCdafbc55yIvVxWOeeTxyrFwZZAYAvQPTev00p4TiiviX';
