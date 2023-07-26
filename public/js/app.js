@@ -72,7 +72,7 @@ Vue.component('nav-bar', {
 Vue.component('todo-app', {
 	template: `
 		<div class="bg-gray-100">
-			<div class="min-h-screen flex items-center justify-center -mt-32">
+			<div class="min-h-screen flex items-center justify-center -mt-10">
 				<div class="bg-white rounded-lg shadow-lg p-8 w-8/12">
 					<h1 class="text-red-500 font-bold mb-4 text-5xl text-center opacity-50">todos</h1>
 					<div class="container">
