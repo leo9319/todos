@@ -8,7 +8,6 @@
 	if(isset($_POST['ids']) && !empty($_POST['ids'])) {
 
 		$ids = $_POST['ids'];
-
 		$task = new Task();
 
 		if($task->delete($ids)) {

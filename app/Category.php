@@ -13,7 +13,6 @@ class Category extends Model {
 	public static function all($user_id)
 	{
 		$categories = array();
-
 		$model = new self();
 
 		$query = "SELECT * FROM $model->table WHERE user_id = '$user_id'";
@@ -59,7 +58,6 @@ class Category extends Model {
 	public function delete($ids) 
 	{
 		$ids = implode("','", explode(',', $ids));
-
 		$query = "DELETE FROM $this->table WHERE id IN ('".$ids."')";
 
 		return $sql = $this->conn->query($query);
@@ -72,7 +70,6 @@ class Category extends Model {
      */
 	public function singleDelete($id) 
 	{
-
 		$query = "DELETE FROM $this->table WHERE id = $id";
 
 		return $sql = $this->conn->query($query);
