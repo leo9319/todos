@@ -8,6 +8,7 @@ session_start();
 
 $user = new User();
 $is_premium = $_SESSION['is_premium'];
+$_SESSION['card_error'] = '';
 
 if($is_premium) {
     header("location: index.php");
@@ -28,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Create a charge using the token
         $charge = \Stripe\Charge::create([
-            'amount' => 1999, // Amount in cents (e.g., $19.99)
+            'amount' => 1999,
             'currency' => 'usd',
             'source' => $token,
-            'description' => 'Example one-time payment',
+            'description' => 'To do ap one-time payment',
         ]);
 
         // Payment successful, you can handle the success scenario here
@@ -44,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } catch (\Stripe\Exception\CardException $e) {
         // Payment failed due to card error
-        echo 'Card declined: ' . $e->getMessage();
+        $_SESSION['card_error'] = 'Card declined: ' . $e->getMessage();
     } catch (Exception $e) {
         // Other error occurred
-        echo 'Error: ' . $e->getMessage();
+        $_SESSION['card_error'] = 'Error: ' . $e->getMessage();
     }
 }
 ?>
@@ -79,7 +80,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <button class="mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs w-full" type="submit">Pay Now</button>
                             <!-- Used to display form errors. -->
-                            <div id="card-errors" role="alert"></div>
+                            <div id="card-errors" class="text-red-500 text-xs" role="alert"></div>
+                            <div class="text-xs text-red-500">
+                                <?php
+                                if (isset($_SESSION['card_error'])) {
+                                    echo $_SESSION['card_error'];
+                                }
+                                ?>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -95,13 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
     // Create a Stripe client
-    var stripe = Stripe('<?php echo $stripePublicKey; ?>');
+    let stripe = Stripe('<?php echo $stripePublicKey; ?>');
 
     // Create an instance of Elements
-    var elements = stripe.elements();
+    let elements = stripe.elements();
 
     // Create a card Element and mount it on the card-element div
-    var card = elements.create('card');
+    let card = elements.create('card');
 
     card.mount('#card-element');
 
@@ -116,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 
     // Handle form submission
-    var form = document.getElementById('payment-form');
+    let form = document.getElementById('payment-form');
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -142,8 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Submit the form with the token ID
     function stripeTokenHandler(token) {
         // Insert the token ID into the form so it gets submitted to the server
-        var form = document.getElementById('payment-form');
-        var hiddenInput = document.createElement('input');
+        let form = document.getElementById('payment-form');
+        let hiddenInput = document.createElement('input');
         hiddenInput.setAttribute('type', 'hidden');
         hiddenInput.setAttribute('name', 'stripeToken');
         hiddenInput.setAttribute('value', token.id);
