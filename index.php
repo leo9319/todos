@@ -19,22 +19,14 @@
 <html>
 <head>
 	<title>Portfolio | Todos</title>
-	<link rel="stylesheet" href="public/css/main.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <?php include_once 'partials/styles.php' ?>
 </head>
 <body>
-
 	<div id="app">
         <nav-bar></nav-bar>
 		<todo-app></todo-app>
 	</div>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-	<script type="text/javascript" src="public/js/app.js"></script>
+    <?php include_once 'partials/scripts.php' ?>
 	
 </body>
 </html>
