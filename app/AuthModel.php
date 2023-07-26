@@ -31,7 +31,18 @@ class AuthModel extends Model {
         $stmt->close();
     }
 
-    public function register($username, $email, $password) {
+    public function register($username, $email, $password, $confirm_password) {
+        if ($password !== $confirm_password) {
+            $_SESSION["registration_error"] = "Password and Confirm Password do not match.";
+            return;
+        }
+
+        // Check if the password meets the criteria
+        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $password)) {
+            $_SESSION["registration_error"] = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.";
+            return;
+        }
+
         $conn = $this->getConnection();
         // Check if the username and email already exist in the database
         // Insert the new user's information into the database if the username and email are unique
@@ -42,7 +53,7 @@ class AuthModel extends Model {
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            echo "Username or email already exists";
+            $_SESSION["registration_error"] = "Username or email already exists";
         } else {
             // Insert the new user data into the database
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -50,9 +61,9 @@ class AuthModel extends Model {
             $stmt = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
             $stmt->bind_param("sss", $username, $hashedPassword, $email);
             if ($stmt->execute()) {
-                echo "Registration successful! You can now log in.";
+                header("Location: index.php");
             } else {
-                echo "Error during registration. Please try again.";
+                $_SESSION["registration_error"] = "Invalid username or password";
             }
         }
 
