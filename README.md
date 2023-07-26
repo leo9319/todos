@@ -1,3 +1,2 @@
-# todos
-
-#database file tasks.sql added in db folder
+###Overview
+This repository contains the source code for a Todo List application. The application allows users to create, manage, and categorize their to-do lists. It also offers a premium subscription plan through Stripe payment, enabling unlimited todo lists. Without a premium subscription, users are limited to a maximum of 5 todo lists. Additionally, the SQL database file can be downloaded from the db folder, and the database name is todos.
